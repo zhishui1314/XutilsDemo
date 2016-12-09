@@ -9,36 +9,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
+import com.anke.vehicle.xutils30demo.Views.X3Utils;
 
+import org.xutils.common.Callback;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
     String getUrl = "https://api.github.com/repos/square/okhttp/contributors";
-    String getsUrl = "https://www.baidu.com";
-    String url = "http://172.16.100.100:8810/";
+    String getsUrl = "https://www.sogou.com";
+    String url = "http://172.16.100.58:8080/1.json";
     String imgUrl = "https://www.baidu.com/img/bd_logo1.png";
     String video = "http://172.16.100.58:8080/AnchorVehicle.apk";
 
     private TextView tvResult;
     private ProgressDialog progressDialog;
+    private ImageView imgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvResult = (TextView) findViewById(R.id.tvResult);
+        imgs = (ImageView) findViewById(R.id.imgs);
     }
 
     /**
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void xg(View view) {
-        XUtils.getMethod(getsUrl, new XUtils.XListener() {
+        XUtils.getMethod(this,url, new XUtils.XListener() {
             @Override
             public void onResult(String result) {
                 if (!TextUtils.isEmpty(result)) {
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
 
     }
 
@@ -76,9 +76,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 文件的下载
+     * @param view
+     */
     public void xx(View view) {
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/AnchorVehicle.apk";
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMax(100);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMessage("努力下载中。。。");
         XUtils.downLoad(video, path, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
@@ -92,11 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onLoading(long total, long current, boolean isDownloading) {
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.setMessage("努力下载中。。。");
                 progressDialog.show();
-                progressDialog.setMax(100);
-                progressDialog.setProgress((int) ((current * 100) / total));
+             progressDialog.setProgress((int) (current * 100/total));
             }
 
             @Override
@@ -129,6 +133,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 加载具有缓存功能的图片
+     * @param view
+     */
+    public void xt(View view) {
+        XUtils.dealWith(imgUrl,imgs);
+    }
 }
 
 

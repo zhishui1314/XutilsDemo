@@ -18,9 +18,18 @@
         android:layout_height="wrap_content"
         android:text="下载文件"
         android:onClick="xx"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="处理图片"
+        android:onClick="xt"/>
     <TextView
         android:id="@+id/tvResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
+    <ImageView
+        android:id="@+id/imgs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

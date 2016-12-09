@@ -1,11 +1,17 @@
 package com.anke.vehicle.xutils30demo;
 
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.xutils.common.Callback;
 import org.xutils.common.task.PriorityExecutor;
+import org.xutils.common.util.DensityUtil;
+import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
+import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.io.File;
@@ -27,7 +33,7 @@ public class XUtils {
     public static void getMethod(String url, final XListener xListener) {
 
         RequestParams params = new RequestParams(url);
-        x.http().get(params, new Callback.CacheCallback<String>() {
+        x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.e("get请求onSuccess", result);
@@ -37,7 +43,7 @@ public class XUtils {
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 Log.e("get请求onError", ex.getMessage() + "!!!!!!!!");
-                xListener.onResult("");
+                    xListener.onResult("");
             }
 
             @Override
@@ -51,10 +57,6 @@ public class XUtils {
 
             }
 
-            @Override
-            public boolean onCache(String result) {
-                return false;
-            }
         });
     }
 
@@ -67,7 +69,7 @@ public class XUtils {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 params.addBodyParameter(entry.getKey(), entry.getValue());
             }
-            x.http().post(params, new Callback.CacheCallback<String>() {
+            x.http().post(params, new Callback.CommonCallback<String>() {
                 @Override
                 public void onSuccess(String result) {
                     xListener.onResult(result);
@@ -88,10 +90,6 @@ public class XUtils {
 
                 }
 
-                @Override
-                public boolean onCache(String result) {
-                    return false;
-                }
             });
         }
 
@@ -144,6 +142,22 @@ public class XUtils {
         x.http().get(params, callback);
     }
 
+    /**
+     * 具有缓存功能的图片
+     * @param url
+     * @param imageView
+     */
+ public  static void dealWith(String url, ImageView imageView){
+     ImageOptions imageOptions = new ImageOptions.Builder()
+             .setSize(DensityUtil.dip2px(120), DensityUtil.dip2px(120))//图片大小
+//             .setRadius(DensityUtil.dip2px(5))//ImageView圆角半径
+             .setCrop(true)// 如果ImageView的大小不是定义为wrap_content, 不要crop.
+             .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+             .setLoadingDrawableId(R.mipmap.ic_launcher)//加载中默认显示图片
+             .setFailureDrawableId(R.mipmap.ic_launcher)//加载失败后默认显示图片
+             .build();
+            x.image().bind(imageView, url,imageOptions);
+ }
     public interface XListener {
         void onResult(String result);
     }
